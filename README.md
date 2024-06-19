@@ -65,4 +65,4 @@ For detailed API documentation and usage examples, refer to the Sword ECS Docume
 Contributions are welcome! Please check out the contribution guidelines.
 
 ## License 📄
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE file](https://github.com/f-irac-odes/rep/edit/master/LICENSE.md) for details.
