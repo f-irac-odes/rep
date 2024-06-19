@@ -3,6 +3,16 @@ type Component = {
     [key: string]: any;
 };
 
+interface SerializedEntity {
+    id: string;
+    components: Component;
+}
+  
+interface SerializedData {
+    entities: SerializedEntity[];
+    systems: string[];
+}
+
 // Entity type definition with optional ID and generic components
 type Entity<T extends Component = {}> = T & { id?: string };
 
@@ -35,7 +45,7 @@ class Sword {
      * @param entity The entity object to add.
      * @returns The added entity with an assigned ID.
      */
-    addEntity<T extends Component>(entity: Entity<T>): Entity<T> {
+    createEntity<T extends Component>(entity: Entity<Partial<T>>): Entity<Partial<T>> {
       const id = (this.entityIdCounter++).toString();
       entity.id = id;
       this.entities.set(id, entity);
@@ -45,13 +55,12 @@ class Sword {
     }
   
     /**
-     * Remove an entity from the ECS by its ID.
-     * @param id The ID of the entity to remove.
+     * Remove an entity from the ECS.
+     * @param entity the entity to remove.
      */
-    removeEntity(id: string): void {
-      const entity = this.entities.get(id);
-      if (entity) {
-        this.entities.delete(id);
+    removeEntity(entity: Entity): void {
+      if (entity.id) {
+        this.entities.delete(entity.id);
         this.updateArchetypes(entity, true);
         this.onEntityRemoved.forEach(callback => callback(entity));
       }
@@ -80,10 +89,15 @@ class Sword {
     /**
      * Update an entity with multiple parameters at once.
      * @param entity The entity to update.
-     * @param updates An object containing the updates to apply to the entity.
+     * @param updatesOrFunction An object or function containing the updates to apply to the entity.
      */
-    updateEntity<T extends Component>(entity: Entity<T>, updates: Partial<T>): void {
-      Object.assign(entity, updates);
+    updateEntity<T extends Component>(entity: Entity<T>, updatesOrFunction: Partial<T> | ((entity: Entity<T>) => void)): void {
+      if (typeof updatesOrFunction === 'function') {
+        updatesOrFunction(entity);
+      } else {
+        Object.assign(entity, updatesOrFunction);
+      }
+
       this.updateArchetypes(entity);
     }
   
@@ -111,17 +125,16 @@ class Sword {
      * @returns A QueryResult object containing entities and lifecycle hooks.
      */
     getEntitiesWithComponents(...componentKeys: (keyof Component)[]): QueryResult {
-      const archetype = new Set(componentKeys);
-      // @ts-ignore
+    //@ts-ignore
+      const archetype = new Set<string>(componentKeys);
+
       if (!this.archetypes.has(archetype)) {
-        // @ts-ignore
         this.archetypes.set(archetype, {
           entities: [],
           onEntityAdded: [],
           onEntityRemoved: [],
         });
       }
-      // @ts-ignore
       return this.archetypes.get(archetype)!;
     }
   
@@ -139,14 +152,24 @@ class Sword {
      * @param name The name of the archetype.
      * @returns The created entity.
      */
-    createEntityFromArchetype(name: string): Entity | null {
+    createEntityFromArchetype(name: string, newData: any): Entity | null {
       const components = this.archetypeDefinitions.get(name);
       if (components) {
-        return this.addEntity({ ...components });
+        return this.createEntity({ ...components, ...newData });
       }
       return null;
     }
-  
+
+    /**
+     * Removes one or more systems from running
+     * @param systems list of systems to remove
+    */  
+    stopSystems(...systems: System[]): void {
+        for (const system of systems) {
+            this.systems.splice(this.systems.indexOf(system), 1);
+        }
+    }
+    
     /**
      * Update the archetypes map when an entity's components change.
      * @param entity The entity whose archetypes are to be updated.
@@ -188,5 +211,58 @@ class Sword {
     private isArchetypeMatch(archetype: Archetype, entityArchetype: Archetype): boolean {
       return [...archetype].every(key => entityArchetype.has(key));
     }
+
+  /**
+   * Serialize all entities and systems in the ECS.
+   * @returns Serialized representation of entities and systems.
+   */
+  serialize(): SerializedData {
+    const serializedEntities: SerializedEntity[] = [];
+    const serializedSystems: string[] = [];
+
+    // Serialize entities
+    this.entities.forEach((entity, id) => {
+      serializedEntities.push({
+        id,
+        components: { ...entity }, // Copy all components into the serialized entity
+      });
+    });
+
+    // Serialize systems (assuming systems are functions)
+    this.systems.forEach((system) => {
+      serializedSystems.push(system.toString()); // Convert system function to string
+    });
+
+    return {
+      entities: serializedEntities,
+      systems: serializedSystems,
+    };
+  }
+
+  /**
+   * Deserialize entities and systems into the ECS.
+   * @param data Serialized data containing entities and systems.
+   */
+  deserialize(data: SerializedData): void {
+    // Clear existing entities and systems
+    this.entities.clear();
+    this.systems = [];
+
+    // Deserialize entities
+    data.entities.forEach(serializedEntity => {
+      const entity: Entity = { id: serializedEntity.id };
+      Object.assign(entity, serializedEntity.components);
+      this.entities.set(serializedEntity.id, entity);
+      if (parseInt(serializedEntity.id) >= this.entityIdCounter) {
+        this.entityIdCounter = parseInt(serializedEntity.id) + 1;
+      }
+    });
+
+    // Deserialize systems 
+    data.systems.forEach(serializedSystem => {
+      // Assuming systems were serialized as strings and need to be recompiled
+      const systemFunction = new Function(serializedSystem) as System;
+      this.systems.push(systemFunction);
+    });
+  }
 }
-  

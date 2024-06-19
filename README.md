@@ -1,39 +1,73 @@
-# Sword ECS 🗡️
+# Sword 🗡️
 
-Sword ECS is a lightweight Entity Component System library for JavaScript with support for archetypes, typed entities, and lifecycle hooks.
+Sword is a lightweight Entity Component System library for JavaScript and Typescript with support for archetypes, typed entities, and lifecycle hooks.
 
 ## Features ✨
 
-- **Entity Management**: Easily add, remove, and update entities with components.
-- **Component-based Design**: Define entities using components for flexible entity composition.
-- **System Execution**: Register systems to process entities based on their components.
-- **Lifecycle Hooks**: Callbacks for entity addition and removal events.
-- **Query System**: Efficiently query entities based on component requirements.
+-  👾 **Entity Management**: Easily add, remove, and update entities with components.
+- 🧩 **Component-based Design**: Define entities using components for flexible entity composition.
+- 😌 **Intuitive Design**: Easy to understand and master.
+- 🪝 **Lifecycle Hooks**: Callbacks for entity addition and removal events.
+- 🔎 **Query System**: Efficiently query entities based on component requirements.
+- 😎 **Typescript Support**: Typescript is... coool!!
+
+## Installation 📦
+You can install Sword ECS via npm:
+
+```bash
+npm install sword-ecs
+```
 
 ## Usage Example 🚀
 
+### create a world 
 ```typescript
-import { Sword, Component, Entity, System, QueryResult } from 'sword-ecs';
+import { Sword } from 'sword-ecs';
 
 // Initialize Sword ECS
 const sword = new Sword();
-
+```
+### Define Entity Type
+```typescript
 // Define components
 type PositionComponent = { x: number; y: number; };
 type VelocityComponent = { dx: number; dy: number; };
+type HealthComponent = {current: number, max: number};
 
-// Example entities
-const entity1: Entity<PositionComponent> = { x: 0, y: 0 };
-const entity2: Entity<PositionComponent & VelocityComponent> = { x: 10, y: 10, dx: 1, dy: -1 };
+type Entity = {
+    position: PositionComponent,
+    velocity: VelocityComponent,
+    health: HealthComponent,
+}
+```
+
+### Create and remove entities
+```typescript
 
 // Add entities to ECS
-sword.addEntity(entity1);
-sword.addEntity(entity2);
+const player = sword.createEntity<Entity>({position: {x: 10, y: 10}});
+const enemy = sword.createEntity<Entity>({
+    position: {x: 10, y: 10},
+    health: {max: 100, current: 100},
+    velocity: {dx: 1, dy: 2}
+});
 
+sword.remove(enemy)
+```
+
+### Add & remove components to entities
+```typescript
+sword.addComponent(player, {health: {max: 100, current: 100}});
+
+//remove a component
+sword.removeComponent(player, 'health');
+```
+
+### Create a system
+```typescript
 // Define a system to update entity positions
-const movementSystem: System = (dt?: number) => {
+function movementSystem(dt?: number) {
   const entities = sword.getEntitiesWithComponents('x', 'y', 'dx', 'dy').entities
-  
   
   return function (dt: number) {
       for(let entity of entities) {
@@ -50,16 +84,10 @@ sword.addSystem(movementSystem);
 // Update ECS
 const deltaTime = 0.1;
 sword.update(deltaTime);
-````
-
-## Installation 📦
-You can install Sword ECS via npm:
-
-```bash
-npm install sword-ecs
 ```
+
 ## Documentation 📚
-For detailed API documentation and usage examples, refer to the Sword ECS Documentation.
+Documentation is coming soon...
 
 ## Contributing 🤝
 Contributions are welcome! Please check out the contribution guidelines.
