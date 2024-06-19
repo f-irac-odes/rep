@@ -1,18 +1,21 @@
+MIT License
 
-### Explanation:
+Copyright (c) 2024 f-irac-odes
 
-- **Title and Description**: The title and initial description introduce the Sword ECS library and its key features.
-  
-- **Features Section**: Lists the main features of Sword ECS using emojis to make them stand out.
-  
-- **Usage Example**: Provides a TypeScript example demonstrating how to use Sword ECS to manage entities, components, systems, and updates.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-- **Installation**: Briefly explains how to install Sword ECS using npm.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-- **Documentation**: Provides a placeholder link to where the documentation would reside.
-
-- **Contributing**: Mentions that contributions are welcome and provides a link to contribution guidelines.
-
-- **License**: States the project's licensing information.
-
-Feel free to customize this Markdown template further based on your specific ECS library's features, documentation links, and other details. This template provides a structured way to introduce, explain, and showcase your ECS library using emojis to enhance readability and engagement.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
