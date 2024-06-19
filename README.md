@@ -32,15 +32,15 @@ sword.addEntity(entity2);
 
 // Define a system to update entity positions
 const movementSystem: System = (dt?: number) => {
-  sword.getEntitiesWithComponents('x', 'y', 'dx', 'dy').entities
+  const entities = sword.getEntitiesWithComponents('x', 'y', 'dx', 'dy').entities
   
   
   return function (dt: number) {
-      forEach(entity => {
+      for(let entity of entities) {
         entity.x += entity.dx * (dt || 1);
         entity.y += entity.dy * (dt || 1);
         sword.updateEntity(entity, { x: entity.x, y: entity.y });
-      });
+      };
   }
 };
 
