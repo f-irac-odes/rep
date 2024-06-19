@@ -1,0 +1,25 @@
+{
+  "name": "game",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "docs": "node_modules/.bin/jsdoc -c jsdoc.json"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2",
+    "vite": "^5.2.0"
+  },
+  "dependencies": {
+    "@arancini/events": "^6.6.1",
+    "@dimforge/rapier3d": "^0.13.1",
+    "@dimforge/rapier3d-compat": "^0.13.1",
+    "@medieval/sword": "^0.0.2",
+    "@types/three": "^0.165.0",
+    "miniplex": "^2.0.0",
+    "randomish": "^0.1.6"
+  }
+}

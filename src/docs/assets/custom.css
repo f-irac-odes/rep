@@ -1,0 +1,41 @@
+:root {
+    --dark-color-background: #030412;
+    --light-color-background: #ffffff;
+    --color-text: #95e492;
+}
+
+body {
+    font: 14px, ui-sans-serif, system-ui, sans-serif;
+    color: #334155;
+}
+
+
+
+pre 
+code {
+    background: #ffffff;
+}
+
+a, button {
+    padding: 6px 8px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+a:hover {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.current span {
+    color: #004ca3;
+}
+
+.current {
+    background-color: #E0Efff;
+}
+
+.tsd-toolbar-contents {
+    padding: 0px 24px;
+    height: 64px;
+}
