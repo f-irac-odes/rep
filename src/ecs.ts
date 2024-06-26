@@ -6,6 +6,7 @@ export class World<T extends {}> {
     entities: T[] = [];
     onEntityAdded: Callback<T>[] = [];
     onEntityRemoved: Callback<T>[] = [];
+    tags: Map<T, string[]> = new Map();
     queries: Query[] = [];
     systems: System[] = [];
 
@@ -148,4 +149,35 @@ export class World<T extends {}> {
     runSystems(deltaTime: number): void {
         this.systems.forEach(system => system(deltaTime));
     }
+
+        /**
+     * Adds a tag to the specified entity.
+     * @param entity - The entity to add the tag to.
+     * @param tag - The tag to add.
+     */
+        addTag(entity: T, tag: string): void {
+            if (!this.tags.has(entity)) {
+                this.tags.set(entity, []);
+            }
+            const entityTags = this.tags.get(entity)!;
+            if (!entityTags.includes(tag)) {
+                entityTags.push(tag);
+            }
+        }
+    
+        /**
+         * Removes a tag from the specified entity.
+         * @param entity - The entity to remove the tag from.
+         * @param tag - The tag to remove.
+         */
+        removeTag(entity: T, tag: string): void {
+            if (this.tags.has(entity)) {
+                const entityTags = this.tags.get(entity)!;
+                const index = entityTags.indexOf(tag);
+                if (index !== -1) {
+                    entityTags.splice(index, 1);
+                }
+            }
+        }
+    
 }
