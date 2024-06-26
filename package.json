@@ -20,6 +20,7 @@
     "@medieval/sword": "^0.0.2",
     "@types/three": "^0.165.0",
     "miniplex": "^2.0.0",
-    "randomish": "^0.1.6"
+    "randomish": "^0.1.6",
+    "three": "^0.165.0"
   }
 }
